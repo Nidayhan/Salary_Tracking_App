@@ -1,0 +1,187 @@
+/* Genel Stil */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #003399; 
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+    position: relative;
+}
+
+header .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+header a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: #666666;
+    border-radius: 5px;
+}
+
+header a:hover {
+    background-color: #555555;
+}
+
+/* Genel içerik ve tablo stilleri */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #003399; 
+    color: #fff;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Modal ve Düzenleme Butonları İçin Genel Stiller */
+.modal {
+    display: none; /* Başlangıçta görünmez */
+    position: fixed; /* Sayfanın sabit kısmında kalır */
+    z-index: 1000; /* Diğer öğelerin üstünde görünür */
+    left: 0;
+    top: 0;
+    width: 100%; /* Ekranın tamamını kaplar */
+    height: 100%; /* Ekranın tamamını kaplar */
+    overflow: auto; /* Kaydırma çubuğu ekleyebilir */
+    background-color: rgba(0, 0, 0, 0.4); /* Arka planı koyulaştır */
+}
+
+/* Modal içerik */
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto; /* Yükseklik ve genişlik için ortalar */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%; /* Ekranın %90'ını kaplar */
+    max-width: 600px; /* Maksimum genişlik */
+    max-height: 80vh; /* Maksimum yükseklik ekranın %80'i */
+    overflow: auto; /* İçerik kaydırma */
+}
+
+/* Kapatma butonu */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Form ve Modal İçeriği */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input[type="text"], input[type="number"], select, textarea {
+    width: calc(100% - 22px);
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+textarea {
+    resize: vertical;
+    height: 100px;
+}
+
+button, input[type="submit"] {
+    background-color: #003399; 
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover, input[type="submit"]:hover {
+    background-color: #0056b3; /* Koyu mavi */
+}
+
+fieldset {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+fieldset legend {
+    font-weight: bold;
+}
+
+/* Düzenleme ve Silme Butonları */
+.edit-maas-button, .delete-button {
+    background-color: #666666; /* Gri renk */
+    border: none;
+    color: #fff;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.edit-maas-button:hover {
+    background-color: #555555; /* Koyu gri */
+}
+
+.delete-button {
+    background-color: #990000;
+    height: 30px; /* Butonun yüksekliğini ayarlayın */
+    width: 80px;  /* Butonun genişliğini ayarlayın */
+}
+
+.delete-button:hover {
+    background-color: #bd2130; /* Koyu kırmızı */
+}
+
+.delete-button:active {
+    background-color: #a71d2a; /* Daha koyu kırmızı */
+}

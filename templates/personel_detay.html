@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personel Detay</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <header>
+    <div class="container">
+        <!-- Personel Adı -->
+        <div class="header">
+            <h1>{{ personel.ad }} - Detay</h1>
+        </div>
+    </header>
+
+    
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Yıl</th>
+                <th>Ay</th>
+                <th>Net Maaş</th>
+                <th>Yemek</th>
+                <th>Avans</th>
+                <th>İcra</th>
+                <th>Kesinti 1</th>
+                <th>Kesinti 2</th>
+                <th>Açıklama</th>
+                <th>Bankaya Yatan</th>
+                <th>Elden Teslim</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            {% for maas in maaslar %}
+            <tr data-maas-id="{{ maas.id }}">
+                <td>{{ maas.yil }}</td>
+                <td>{{ maas.ay }}</td>
+                <td>{{ maas.net_maas }}</td>
+                <td>{{ maas.yemek }}</td>
+                <td>{{ maas.avans }}</td>
+                <td>{{ maas.icra }}</td>
+                <td>{{ maas.kesinti1 }}</td>
+                <td>{{ maas.kesinti2 }}</td>
+                <td>{{ maas.aciklama }}</td>
+                <td>{{ maas.bankaya_yatan }}</td>
+                <td>{{ maas.elden_teslim }}</td>
+                <td><button type="button" class="edit-maas-button">Düzenle</button></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button id="openModalBtn">Maaş Ekle</button>
+    <a href="{{ url_for('index') }}">Geri Dön</a>
+    
+    
+        
+        <!-- Maaş Ekleme Modalı -->
+    <div id="add-maas-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeAddModal">&times;</span>
+            <h2>Maaş Ekle</h2>
+            <form id="maasForm">
+                <input type="hidden" id="personel_ad" name="ad" value="{{ personel.ad }}">
+                <div class="form-group">
+                    <label for="yil">Yıl:</label>
+                    <input type="number" id="yil" name="yil" required readonly>
+                </div>
+                <div class="form-group">
+                    <label for="ay">Ay:</label>
+                    <input type="text" id="ay" name="ay" required readonly>
+                </div>
+                <div class="form-group">
+                    <label for="net_maas">Net Maaş:</label>
+                    <input type="number" step="0.01" id="net_maas" name="net_maas" required>
+                </div>
+                <div class="form-group">
+                    <label for="yemek">Yemek:</label>
+                    <input type="number" step="0.01" id="yemek" name="yemek" required>
+                </div>
+                <div class="form-group">
+                    <label for="avans">Avans:</label>
+                    <input type="number" step="0.01" id="avans" name="avans" required>
+                </div>
+                <div class="form-group">
+                    <label for="icra">İcra:</label>
+                    <input type="number" step="0.01" id="icra" name="icra" required>
+                </div>
+                <div class="form-group">
+                    <label for="kesinti1">Kesinti 1:</label>
+                    <input type="number" step="0.01" id="kesinti1" name="kesinti1" required>
+                </div>
+                <div class="form-group">
+                    <label for="kesinti2">Kesinti 2:</label>
+                    <input type="number" step="0.01" id="kesinti2" name="kesinti2" required>
+                </div>
+                <div class="form-group">
+                    <label for="aciklama">Açıklama:</label>
+                    <input type="text" id="aciklama" name="aciklama">
+                </div>
+                <div class="form-group">
+                    <label for="bankaya_yatan">Bankaya Yatan:</label>
+                    <input type="number" step="0.01" id="bankaya_yatan" name="bankaya_yatan" value="17002" required readonly>
+                </div>
+                <div class="form-group">
+                    <label for="elden_teslim">Elden Teslim:</label>
+                    <input type="number" step="0.01" id="elden_teslim" name="elden_teslim" readonly>
+                </div>
+                <button type="submit" class="submit-button">Ekle</button>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Maaş Düzenleme Modalı -->
+    <div id="edit-maas-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Maaş Düzenle</h2>
+            <form id="edit-maas-form">
+                <input type="hidden" id="edit-maas-id" name="id">
+        
+                <div class="form-group">
+                    <label for="edit-yil">Yıl:</label>
+                    <input type="text" id="edit-yil" name="yil" required readonly>
+                </div>
+                <div class="form-group">
+                    <label for="edit-ay">Ay:</label>
+                    <input type="text" id="edit-ay" name="ay" required readonly>
+                </div>
+                <div class="form-group">
+                    <label for="edit-net_maas">Net Maaş:</label>
+                    <input type="number" id="edit-net_maas" name="net_maas" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-yemek">Yemek:</label>
+                    <input type="number" id="edit-yemek" name="yemek" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-avans">Avans:</label>
+                    <input type="number" id="edit-avans" name="avans" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-icra">İcra:</label>
+                    <input type="number" id="edit-icra" name="icra" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-kesinti1">Kesinti 1:</label>
+                    <input type="number" id="edit-kesinti1" name="kesinti1" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-kesinti2">Kesinti 2:</label>
+                    <input type="number" id="edit-kesinti2" name="kesinti2" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-aciklama">Açıklama:</label>
+                    <input type="text" id="edit-aciklama" name="aciklama">
+                </div>
+                <div class="form-group">
+                    <label for="edit-bankaya_yatan">Bankaya Yatan:</label>
+                    <input type="number" id="edit-bankaya_yatan" name="bankaya_yatan" required readonly>
+                </div>
+                <div class="form-group">
+                    <label for="edit-elden_teslim">Elden Teslim:</label>
+                    <input type="number" id="edit-elden_teslim" name="elden_teslim" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Güncelle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <script>
+        document.getElementById('edit-personel-btn').addEventListener('click', function() {
+            document.getElementById('edit-personel-modal').style.display = 'block';
+        });
+
+        document.getElementById('closeEditPersonelModal').addEventListener('click', function() {
+            document.getElementById('edit-personel-modal').style.display = 'none';
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var addModal = document.getElementById("add-maas-modal");
+            var editModal = document.getElementById("edit-maas-modal");
+            var openModalBtn = document.getElementById("openModalBtn");
+            var closeAddModal = document.getElementById("closeAddModal");
+            var closeEditModal = editModal.querySelector('.close');
+            var addForm = document.getElementById("maasForm");
+            var editForm = document.getElementById("edit-maas-form");
+
+            // Maaş Ekleme Modalını Aç
+            openModalBtn.onclick = function() {
+                console.log('Modal açma butonuna tıklandı'); // Debug
+                var personelAd = document.getElementById("personelAd")?.textContent.trim();
+                if (personelAd) {
+                    document.getElementById("personel_ad").value = personelAd;
+                }
+            
+                var today = new Date();
+                var year = today.getFullYear();
+                var month = today.toLocaleString('default', { month: 'long' });
+            
+                document.getElementById("yil").value = year;
+                document.getElementById("ay").value = month;
+            
+                addModal.style.display = "block";
+            };
+
+            // Maaş Ekleme Modalını Kapat
+            closeAddModal.onclick = function() {
+                addModal.style.display = "none";
+            };
+
+            closeEditModal.onclick = function() {
+                editModal.style.display = "none";
+            };
+
+            window.onclick = function(event) {
+                if (event.target == addModal) {
+                    addModal.style.display = "none";
+                }
+                if (event.target == editModal) {
+                    editModal.style.display = "none";
+                }
+            };
+
+            // Maaş Ekleme Formu Gönderim
+            addForm.onsubmit = function(event) {
+                event.preventDefault();
+
+                var netMaas = parseFloat(document.getElementById("net_maas").value);
+                var yemek = parseFloat(document.getElementById("yemek").value);
+                var avans = parseFloat(document.getElementById("avans").value);
+                var icra = parseFloat(document.getElementById("icra").value);
+                var kesinti1 = parseFloat(document.getElementById("kesinti1").value);
+                var kesinti2 = parseFloat(document.getElementById("kesinti2").value);
+                var bankayaYatan = 17002;
+
+                var eldenTeslim = (netMaas + yemek + avans) - (icra + kesinti1 + kesinti2 + bankayaYatan);
+                document.getElementById("elden_teslim").value = eldenTeslim;
+
+                var formData = {
+                    ad: document.getElementById("personel_ad").value,
+                    yil: document.getElementById("yil").value,
+                    ay: document.getElementById("ay").value,
+                    net_maas: netMaas,
+                    yemek: yemek,
+                    avans: avans,
+                    icra: icra,
+                    kesinti1: kesinti1,
+                    kesinti2: kesinti2,
+                    aciklama: document.getElementById("aciklama").value,
+                    bankaya_yatan: bankayaYatan,
+                    elden_teslim: eldenTeslim
+                };
+
+                fetch('/api/maas-ekle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Tabloyu Güncelle
+                        updateTable();
+                        // Modalı Kapat
+                        addModal.style.display = "none";
+                        // Formu Sıfırla
+                        addForm.reset();
+                    } else {
+                        console.error('Sunucu Hatası:', data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Hata:', error);
+                });
+            };
+
+            // Tabloyu Güncelle
+            function updateTable() {
+                var tableBody = document.getElementById('tableBody');
+                var row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${document.getElementById("yil").value}</td>
+                    <td>${document.getElementById("ay").value}</td>
+                    <td>${document.getElementById("net_maas").value}</td>
+                    <td>${document.getElementById("yemek").value}</td>
+                    <td>${document.getElementById("avans").value}</td>
+                    <td>${document.getElementById("icra").value}</td>
+                    <td>${document.getElementById("kesinti1").value}</td>
+                    <td>${document.getElementById("kesinti2").value}</td>
+                    <td>${document.getElementById("aciklama").value}</td>
+                    <td>${document.getElementById("bankaya_yatan").value}</td>
+                    <td>${document.getElementById("elden_teslim").value}</td>
+                    <td><button type="button" class="edit-maas-button">Düzenle</button></td>
+                `;
+                tableBody.appendChild(row);
+            }
+
+            function attachEditHandlers() {
+                document.querySelectorAll('.edit-maas-button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        var row = button.closest('tr');
+                        var maasId = row.getAttribute('data-maas-id');
+            
+                        document.getElementById('edit-maas-id').value = maasId;
+                        document.getElementById('edit-yil').value = row.children[0].textContent.trim();
+                        document.getElementById('edit-ay').value = row.children[1].textContent.trim();
+                        document.getElementById('edit-net_maas').value = row.children[2].textContent.trim();
+                        document.getElementById('edit-yemek').value = row.children[3].textContent.trim();
+                        document.getElementById('edit-avans').value = row.children[4].textContent.trim();
+                        document.getElementById('edit-icra').value = row.children[5].textContent.trim();
+                        document.getElementById('edit-kesinti1').value = row.children[6].textContent.trim();
+                        document.getElementById('edit-kesinti2').value = row.children[7].textContent.trim();
+                        document.getElementById('edit-aciklama').value = row.children[8].textContent.trim();
+                        document.getElementById('edit-bankaya_yatan').value = row.children[9].textContent.trim();
+                        document.getElementById('edit-elden_teslim').value = row.children[10].textContent.trim();
+            
+                        editModal.style.display = 'block';
+                    });
+                });
+            }
+            
+            // Tabloya ilk yükleme sonrası düzenleme butonlarını bağlama
+            attachEditHandlers();
+            // Düzenleme Formu Gönderim
+            editForm.onsubmit = function(event) {
+                event.preventDefault();
+
+                var formData = {
+                    id: document.getElementById('edit-maas-id').value,
+                    yil: document.getElementById('edit-yil').value,
+                    ay: document.getElementById('edit-ay').value,
+                    net_maas: parseFloat(document.getElementById('edit-net_maas').value),
+                    yemek: parseFloat(document.getElementById('edit-yemek').value),
+                    avans: parseFloat(document.getElementById('edit-avans').value),
+                    icra: parseFloat(document.getElementById('edit-icra').value),
+                    kesinti1: parseFloat(document.getElementById('edit-kesinti1').value),
+                    kesinti2: parseFloat(document.getElementById('edit-kesinti2').value),
+                    aciklama: document.getElementById('edit-aciklama').value,
+                    bankaya_yatan: parseFloat(document.getElementById('edit-bankaya_yatan').value),
+                    elden_teslim: parseFloat(document.getElementById('edit-elden_teslim').value)
+                };
+
+                fetch(`/api/maas-guncelle/${formData.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        updateTable();
+                        editModal.style.display = "none";
+                    } else {
+                        console.error('Sunucu Hatası:', data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Hata:', error);
+                });
+            };
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

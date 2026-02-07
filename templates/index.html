@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Personel Listesi</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Personel Listesi</h1>
+            <a href="#" class="button" id="add-personel-button">Personel Ekle</a>
+            <a href="{{ url_for('logout') }}" class="button logout">Çıkış Yap</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="main-container">
+            <div class="filters-wrapper">
+                <div class="search-section">
+                    <input type="text" id="search-box" class="search-box" placeholder="Ara...">
+                </div>
+            </div>
+            <div class="table-section">
+                <form id="delete-form" action="{{ url_for('delete_personel') }}" method="POST">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Seç</th> 
+                                <th>Personel Adı</th>
+                                <th>Departman</th>
+                                <th>İşlem</th> 
+                            </tr>
+                        </thead>
+                        <tbody id="personel-table-body">
+                            {% for personel in personeller %}
+                            <tr data-personel-id="{{ personel.id }}">
+                                <td><input type="checkbox" name="personel_ids" value="{{ personel.id }}"></td>
+                                <td><a href="{{ url_for('personel_detay', personel_id=personel.id) }}">{{ personel.ad }}</a></td>
+                                <td>{{ personel.departman }}</td>
+                                <td><button type="button" class="edit-button">Düzenle</button></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <button type="submit" class="delete-button">Sil</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Personel Ekle Modal -->
+    <div id="add-personel-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Personel Ekle</h2>
+            <form method="post" action="{{ url_for('add_personel') }}">
+                <label for="ad">Ad:</label>
+                <input type="text" id="ad" name="ad" required>
+
+                <label for="departman">Departman:</label>
+                <input type="text" id="departman" name="departman" required>
+
+               <br><br>
+                <input type="submit" value="Ekle">
+            </form>
+        </div>
+    </div>
+
+    <!-- Düzenleme Modal -->
+    <div id="edit-personel-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Personel Düzenle</h2>
+            <form id="edit-personel-form" method="post" action="{{ url_for('update_personel') }}">
+                <input type="hidden" id="edit-personel-id" name="id">
+                
+                <label for="edit-ad">Ad:</label>
+                <input type="text" id="edit-ad" name="ad" required>
+                
+                <br>
+                <label for="edit-departman">Departman:</label>
+                <input type="text" id="edit-departman" name="departman" required>
+
+                <br><br>
+                <input type="submit" value="Güncelle">
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Arama ve filtreleme işlevleri
+            const searchBox = document.getElementById('search-box');
+            const table = document.querySelector('.table-section table');
+            const tbody = table.querySelector('tbody');
+
+            function filterTable() {
+                const searchText = searchBox.value.toLowerCase();
+                Array.from(tbody.rows).forEach(row => {
+                    const personelAdi = row.cells[1].textContent.toLowerCase(); // Personel adı hücresinin indexi 1
+                    const matchesSearch = personelAdi.includes(searchText);
+                    row.style.display = matchesSearch ? '' : 'none';
+                });
+            }
+
+            searchBox.addEventListener('input', filterTable);
+
+            // Modal açma ve kapama
+            const addModal = document.getElementById('add-personel-modal');
+            const addBtn = document.getElementById('add-personel-button');
+            const addSpan = addModal.querySelector('.close');
+
+            addBtn.onclick = function() {
+                addModal.style.display = 'block';
+            }
+
+            addSpan.onclick = function() {
+                addModal.style.display = 'none';
+            }
+
+            window.onclick = function(event) {
+                if (event.target === addModal) {
+                    addModal.style.display = 'none';
+                }
+            }
+
+            // Düzenleme modal işlemleri
+            var editButtons = document.querySelectorAll('.edit-button');
+            var editModal = document.getElementById('edit-personel-modal');
+            var closeModalButton = editModal.querySelector('.close');
+            var editForm = document.getElementById('edit-personel-form');
+
+            editButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var row = button.closest('tr');
+                    var personelId = row.getAttribute('data-personel-id');
+                    var personelAd = row.children[1].textContent.trim();
+                    var personelDepartman = row.children[2].textContent.trim(); // Departman hücresinin indexi 2
+
+                    // Modal'ı doldur
+                    document.getElementById('edit-personel-id').value = personelId;
+                    document.getElementById('edit-ad').value = personelAd;
+                    document.getElementById('edit-departman').value = personelDepartman;
+
+                    editModal.style.display = 'block';
+                });
+            });
+
+            // Modal'ı kapama
+            closeModalButton.onclick = function() {
+                editModal.style.display = 'none';
+            };
+
+            window.onclick = function(event) {
+                if (event.target === editModal) {
+                    editModal.style.display = 'none';
+                }
+            };
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
